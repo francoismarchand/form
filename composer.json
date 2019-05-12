@@ -1,0 +1,26 @@
+{
+    "name": "francoismarchand/form",
+    "description": "Form builder",
+    "type": "library",
+    "authors": [
+        {
+            "name": "François Marchand",
+            "email": "contact@francoismarchand.fr",
+            "role": "Developer"
+        }
+    ],
+    "keywords": [
+        "form"
+    ],
+    "license": [
+        "MIT"
+    ],
+    "require": {
+        "psr/http-message": "^1.0"
+    },
+    "autoload": {
+        "psr-4" : {
+            "francoismarchand\\form\\" : "src"
+        }
+    }
+}
