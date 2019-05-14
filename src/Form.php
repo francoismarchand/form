@@ -201,23 +201,23 @@ class Form
             }
 
             foreach ($request->getParsedBody() as $key => $value) {
-                if ($field instanceof FileField) {
-                    $file = $request->getUploadedFiles()[$field->getName()];
-                    if ($file->getError() > 0) {
-                        $this->errors .= "Erreur lors du transfert.</br>";
-                    }
-                    if ($field->getMaxLength() > 0 && $file->getSize() > $field->getMaxLength()) {
-                        $this->errors = "Le fichier est trop volumineux.</br>";
-                    }
-
-                    $this->upload(
-                        $field->getName(),
-                        $field->getFileName(),
-                        $field->getDirectory()
-                    );
-                }
-
                 if ($key == $field->getName()) {
+                    if ($field instanceof FileField && $value != $field->getValue()) {
+                        $file = $request->getUploadedFiles()[$field->getName()];
+                        if ($file->getError() > 0) {
+                            $this->errors .= "Erreur lors du transfert.</br>";
+                        }
+                        if ($field->getMaxLength() > 0 && $file->getSize() > $field->getMaxLength()) {
+                            $this->errors = "Le fichier est trop volumineux.</br>";
+                        }
+
+                        $this->upload(
+                            $field->getName(),
+                            $field->getFileName(),
+                            $field->getDirectory()
+                        );
+                    }
+
                     if ($field->getMaxLength() > 0 && len($value) > $field->getMaxLength()) {
                         $this->errors .= sprintf('Le champ %s ne doit pas dépasser %s caractères%s', $field->getLabel(), $field->getMaxLength(), \PHP_EOL);
                     }
