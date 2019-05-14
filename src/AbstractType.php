@@ -2,7 +2,7 @@
 
 namespace francoismarchand\form;
 
-use fesseeo\form\Form;
+use francoismarchand\form\Field\AbstractField;
 
 abstract class AbstractType
 {
@@ -10,13 +10,23 @@ abstract class AbstractType
 
     public function buildForm()
     {
-        $fields = [
 
-        ]
     }
 
-    private function getFields(): array
+    public function setData()
     {
-        return $this->fields();
+
+    }
+
+    public function add(AbstractField $field): self
+    {
+        $this->fields [] = $field;
+
+        return $this;
+    }
+
+    public function getFields(): array
+    {
+        return $this->fields;
     }
 }

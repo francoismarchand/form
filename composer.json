@@ -1,6 +1,6 @@
 {
     "name": "francoismarchand/form",
-    "description": "Form builder",
+    "description": "framework agnostic Form builder in PHP width PSR-7 request",
     "type": "library",
     "authors": [
         {
@@ -10,7 +10,9 @@
         }
     ],
     "keywords": [
-        "form"
+        "form",
+        "PHP",
+        "PSR"
     ],
     "license": [
         "MIT"
@@ -22,5 +24,13 @@
         "psr-4" : {
             "francoismarchand\\form\\" : "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "francoismarchand\\form\\Test\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
     }
 }
