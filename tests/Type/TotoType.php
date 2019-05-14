@@ -1,52 +1,7 @@
-# Form
+<?php
 
-Simple OOP Form builder width PSR-7 request
+namespace francoismarchand\form\Test\Type;
 
-## Basic usage
-
-```php
-
-//Psr\Http\Message\ServerRequestInterface
-$request = ServerRequest::fromGlobals();
-$toto = new Toto();
-
-$form = $builder->create($request, TotoType::class, $toto);
-
-if ($form->isSubmited()) {
-    if ($form->isValid()) {
-        $this->fail('Form should not be valid');
-    }
-
-    echo $form->getErrors();
-}
-
-echo $form->createView();
-```
-
-```php
-class Toto
-{
-    private $title;
-    private $text;
-    private $choice;
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    ...
-}
-```
-
-```php
 use francoismarchand\form\AbstractType;
 use francoismarchand\form\Field\TextField;
 use francoismarchand\form\Field\TextAreaField;
@@ -79,4 +34,3 @@ class TotoType extends AbstractType
         ];
     }
 }
-```
