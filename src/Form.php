@@ -173,9 +173,8 @@ class Form
         return $this->errors;
     }
 
-    public function upload(string $fieldName, string $fileName, string $directory)
+    public function upload($file, string $fieldName, string $fileName, string $directory)
     {
-        $file = $this->request->getUploadedFiles()[$fieldName];
         $setter = 'set' . \ucfirst($fieldName);
         if (method_exists($this->object, $setter)) {
             $this->object->$setter($fileName);
@@ -200,10 +199,31 @@ class Form
                 continue;
             }
 
+            $setter = 'set' . \ucfirst($field->getName());
+            $getter = 'get' . \ucfirst($field->getName());
+
             foreach ($request->getParsedBody() as $key => $value) {
                 if ($key == $field->getName()) {
-                    if ($field instanceof FileField && $value != $field->getValue()) {
-                        $file = $request->getUploadedFiles()[$field->getName()];
+                    if ($field->getMaxLength() > 0 && len($value) > $field->getMaxLength()) {
+                        $this->errors .= sprintf('Le champ %s ne doit pas dépasser %s caractères%s', $field->getLabel(), $field->getMaxLength(), \PHP_EOL);
+                    }
+
+                    if (method_exists($object, $setter)) {
+                        $object->$setter($value);
+                        $field->setValue($value);
+                        $this->fields[$idField] = $field;
+                    }
+                }
+            }
+
+            if (is_array($request->getUploadedFiles())) {
+                foreach ($request->getUploadedFiles() as $key => $file) {
+                    if (
+                        $key == $field->getName() && (
+                            $object->$getter() !== $field->getValue() ||
+                            empty($field->getValue())
+                        )
+                    ) {
                         if ($file->getError() > 0) {
                             $this->errors .= "Erreur lors du transfert.</br>";
                         }
@@ -212,28 +232,20 @@ class Form
                         }
 
                         $this->upload(
+                            $file,
                             $field->getName(),
                             $field->getFileName(),
                             $field->getDirectory()
                         );
-                    }
 
-                    if ($field->getMaxLength() > 0 && len($value) > $field->getMaxLength()) {
-                        $this->errors .= sprintf('Le champ %s ne doit pas dépasser %s caractères%s', $field->getLabel(), $field->getMaxLength(), \PHP_EOL);
-                    }
-
-                    $setter = 'set' . \ucfirst($field->getName());
-                    if (method_exists($object, $setter)) {
-                        $object->$setter($value);
-                        $field->setValue($value);
-                        $this->fields[$idField]->setValue($value);
+                        $field->setValue($object->$getter());
+                        $this->fields[$idField] = $field;
                     }
                 }
             }
 
-            $setter = 'get' . \ucfirst($field->getName());
-            if (method_exists($object, $setter)) {
-                if ($field->getRequired() && empty($object->$setter($value))) {
+            if (method_exists($object, $getter)) {
+                if ($field->getRequired() && empty($field->getValue())) {
                     $this->errors .= sprintf('Le champ %s est obligatoire%s', $field->getLabel(), \PHP_EOL);
                 }
             }
