@@ -7,6 +7,9 @@ use francoismarchand\form\Field\AbstractField;
 abstract class AbstractType
 {
     private $fields = [];
+    protected $id = 'form';
+    protected $method = 'POST';
+    protected $action = null;
 
     public function buildForm()
     {
@@ -28,5 +31,20 @@ abstract class AbstractType
     public function getFields(): array
     {
         return $this->fields;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 }

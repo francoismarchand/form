@@ -75,24 +75,24 @@ class Form
         return $this;
     }
 
-    public function getMethod(): string
+    public function getMethod(): ?string
     {
         return $this->method;
     }
 
-    public function setMethod(string $method): self
+    public function setMethod(?string $method): self
     {
         $this->method = $method;
 
         return $this;
     }
 
-    public function getAction(): string
+    public function getAction(): ?string
     {
         return $this->action;
     }
 
-    public function setAction(string $action): string
+    public function setAction(?string $action): self
     {
         $this->action = $action;
 

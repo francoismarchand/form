@@ -30,6 +30,16 @@ class Builder
             throw new FormException('Wrong type');
         }
 
+        if (!empty($formType->getId())) {
+            $form->setName($formType->getId());
+        }
+        if (!empty($formType->getMethod())) {
+            $form->setMethod($formType->getMethod());
+        }
+        if (!empty($formType->getAction())) {
+            $form->setAction($formType->getAction());
+        }
+
         $formType->setData($data);
         $formType->buildForm();
 
