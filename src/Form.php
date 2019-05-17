@@ -108,7 +108,13 @@ class Form
 
     public function isSubmited(): bool
     {
-        return $this->submited;
+        if ($this->submited) {
+            $this->mapObjectFromRequest($this->object, $this->request);
+
+            return true;
+        }
+
+        return false;
     }
 
     public function setValid(bool $valid): self
@@ -120,7 +126,7 @@ class Form
 
     public function isValid(): bool
     {
-        return $this->mapObjectFromRequest($this->object, $this->request);
+        return $this->valid;
     }
 
     public function addField(AbstractField $field): self
@@ -204,6 +210,11 @@ class Form
 
             foreach ($request->getParsedBody() as $key => $value) {
                 if ($key == $field->getName()) {
+
+                    if ($field instanceof DateField) {
+                        $value = \DateTime::createFromFormat('Y-m-d', $value);
+                    }
+                    
                     if ($field->getMaxLength() > 0 && len($value) > $field->getMaxLength()) {
                         $this->errors .= sprintf('Le champ %s ne doit pas dépasser %s caractères%s', $field->getLabel(), $field->getMaxLength(), \PHP_EOL);
                     }
